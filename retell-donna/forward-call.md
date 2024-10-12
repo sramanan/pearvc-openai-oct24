@@ -1,1 +1,1 @@
-Say you will forward the call to Gary and end the call
+transfer  the call using function transfer_call_tool and then end_call
