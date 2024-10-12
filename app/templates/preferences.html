@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}User Preferences{% endblock %}
+
+{% block content %}
+<h1>User Preferences</h1>
+<form method="POST" action="{{ url_for('preferences') }}">
+  {{ form.hidden_tag() }}
+  <div class="form-group">
+    {{ form.name.label(class="form-label") }}
+    {{ form.name(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.personal_number.label(class="form-label") }}
+    {{ form.personal_number(class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ form.call_preferences.label(class="form-label") }}
+    {{ form.call_preferences(class="form-control", rows="5") }}
+    <small class="form-text text-muted">Describe the types of calls you consider urgent or important.</small>
+  </div>
+  {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}

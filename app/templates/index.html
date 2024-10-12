@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Call Logs{% endblock %}
+
+{% block content %}
+<h1>Call Logs</h1>
+<form method="GET" action="/" class="form-inline mb-3">
+  <input type="text" name="search" class="form-control mr-2" placeholder="Search by Caller Number" value="{{ request.args.get('search', '') }}">
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Caller Number</th>
+      <th>Call Time</th>
+      <th>Urgent</th>
+      <th>Handled By</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for call in calls %}
+    <tr>
+      <td><a href="{{ url_for('call_details', call_id=call.id) }}">{{ call.caller_number }}</a></td>
+      <td>{{ call.call_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+      <td>
+        {% if call.is_urgent %}
+        <span class="badge badge-danger">Yes</span>
+        {% else %}
+        <span class="badge badge-success">No</span>
+        {% endif %}
+      </td>
+      <td>{{ call.handled_by }}</td>
+      <td>{{ call.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

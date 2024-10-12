@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Call Details{% endblock %}
+
+{% block content %}
+<h1>Call Details</h1>
+<ul class="list-group">
+  <li class="list-group-item"><strong>Caller Number:</strong> {{ call.caller_number }}</li>
+  <li class="list-group-item"><strong>Call Time:</strong> {{ call.call_time.strftime('%Y-%m-%d %H:%M:%S') }}</li>
+  <li class="list-group-item"><strong>Urgent:</strong> {{ 'Yes' if call.is_urgent else 'No' }}</li>
+  <li class="list-group-item"><strong>Handled By:</strong> {{ call.handled_by }}</li>
+  <li class="list-group-item"><strong>Status:</strong> {{ call.status }}</li>
+  <li class="list-group-item"><strong>Transcription:</strong> {{ call.transcription or 'N/A' }}</li>
+</ul>
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Call Logs</a>
+{% endblock %}
+
