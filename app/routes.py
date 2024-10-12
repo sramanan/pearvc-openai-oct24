@@ -9,6 +9,7 @@ from models import User
 from flask_socketio import emit
 import json
 
+
 main = Blueprint('main', __name__)
 
 @app.route('/')
