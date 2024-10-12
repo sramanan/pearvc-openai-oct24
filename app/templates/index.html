@@ -3,12 +3,9 @@
 {% block title %}Call Logs{% endblock %}
 
 {% block content %}
+
 <h1>Call Logs</h1>
-<form method="GET" action="/" class="form-inline mb-3">
-  <input type="text" name="search" class="form-control mr-2" placeholder="Search by Caller Number" value="{{ request.args.get('search', '') }}">
-  <button type="submit" class="btn btn-primary">Search</button>
-</form>
-<table class="table table-striped">
+<table class="table table-striped" id="call-table">
   <thead>
     <tr>
       <th>Caller Number</th>
@@ -18,11 +15,11 @@
       <th>Status</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="call-table-body">
     {% for call in calls %}
-    <tr>
-      <td><a href="{{ url_for('call_details', call_id=call.id) }}">{{ call.caller_number }}</a></td>
-      <td>{{ call.call_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    <tr id="call-{{ call.id }}">
+      <td><a href="{{ url_for('main.call_details', call_id=call.id) }}">{{ call.caller_number }}</a></td>
+      <td>{{ call.call_time.strftime('%Y-%m-%d %H:%M:%S') if call.call_time else 'N/A' }}</td>
       <td>
         {% if call.is_urgent %}
         <span class="badge badge-danger">Yes</span>
@@ -36,4 +33,45 @@
     {% endfor %}
   </tbody>
 </table>
+
+<!-- Include Socket.IO client library -->
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-eVLJsr+aXcITx+LhBBZJtXEh90+SDvyIWcOMCFLjBqShhSXn6vyIGTRIcucpEwg1" crossorigin="anonymous"></script>
+
+<script>
+  var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+  socket.on('connect', function() {
+    console.log('Connected to the server.');
+  });
+
+  socket.on('call_updated', function(call) {
+    console.log('Call updated:', call);
+    updateCallInTable(call);
+  });
+
+  function updateCallInTable(call) {
+    var rowId = 'call-' + call.id;
+    var existingRow = document.getElementById(rowId);
+    var callTime = call.call_time ? new Date(call.call_time).toLocaleString() : 'N/A';
+    var isUrgent = call.is_urgent ? '<span class="badge badge-danger">Yes</span>' : '<span class="badge badge-success">No</span>';
+    var callDetailsUrl = '/call/' + call.id;
+
+    var rowHtml = `
+      <tr id="${rowId}">
+        <td><a href="${callDetailsUrl}">${call.caller_number}</a></td>
+        <td>${callTime}</td>
+        <td>${isUrgent}</td>
+        <td>${call.handled_by}</td>
+        <td>${call.status}</td>
+      </tr>
+    `;
+
+    if (existingRow) {
+      existingRow.outerHTML = rowHtml;
+    } else {
+      var tableBody = document.getElementById('call-table-body');
+      tableBody.insertAdjacentHTML('afterbegin', rowHtml);
+    }
+  }
+</script>
 {% endblock %}

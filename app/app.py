@@ -13,6 +13,8 @@ from retell.resources.agent import AgentResponse
 
 from flask_socketio import SocketIO
 
+from extensions import socketio
+
 app = Flask(__name__)
 app.config.from_object(Config)
 CORS(app)
@@ -21,9 +23,6 @@ migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)  # If using Bootstrap
 
 from routes import *  # Import routes
-
-# Initialize SocketIO
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Import routes after initializing app and socketio
 from routes import main as main_blueprint
@@ -138,6 +137,9 @@ def setup_retell_agent():
     )
 
     return agent
+
+if __name__ == "__main__":
+    socketio.run(app, debug=True)
 
 # Set up the Retell agent
 #agent = setup_retell_agent()
