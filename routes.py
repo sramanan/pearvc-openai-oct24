@@ -90,10 +90,33 @@ def retell_webhook():
         handle_call_started(call_data)
     elif event == 'call_ended':
         handle_call_ended(call_data)
+    elif event == 'call_status_update':
+        handle_call_status_update(call_data)
     else:
         print(f"Unknown event: {event}")
 
     return '', 204
+
+def handle_call_status_update(call_data):
+    call_id = call_data.get('call_id')
+    transcription = call_data.get('transcript')
+    disconnection_reason = call_data.get('disconnection_reason')
+    end_time = datetime.utcfromtimestamp(call_data.get('end_timestamp') / 1000)
+
+    llm_data = call_data.get('retell_llm_dynamic_variables')
+    call_type = llm_data.get('call_type')
+    call_message= llm_data.get('message')
+
+    # Update the call record
+    call = Call.query.get(call_id)
+    if call:
+        call.type = call_type
+        call.message = call_message
+        call.status = 'in progress'
+        db.session.commit()
+        # Emit a socket.io event to update clients
+        socketio.emit('call_updated', call.to_dict())
+
 
 def verify_retell_signature(data, signature):
     # Implement the signature verification logic

@@ -17,16 +17,14 @@ from extensions import socketio
 
 
 
-from pyngrok import ngrok
-
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["https://2ff3-4-39-199-2.ngrok-free.app", "http://localhost:5000"]}})
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)  # If using Bootstrap
 
-socketio.init_app(app, cors_allowed_origins="*")
+socketio.init_app(app)
 
 from routes import *  # Import routes
 
