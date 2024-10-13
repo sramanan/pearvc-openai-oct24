@@ -21,9 +21,9 @@ def upgrade():
     op.create_table('call',
     sa.Column('id', sa.String(), nullable=False),
     sa.Column('caller_number', sa.String(length=20), nullable=True),
-    sa.Column('call_time', sa.DateTime(), nullable=True),
-    sa.Column('transcription', sa.Text(), nullable=True),
-    sa.Column('is_urgent', sa.Boolean(), nullable=True),
+    sa.Column('call_time', sa.String(), nullable=True),
+    sa.Column('transcription', sa.String(), nullable=True),
+    sa.Column('is_urgent', sa.String(), nullable=True),
     sa.Column('handled_by', sa.String(length=50), nullable=True),
     sa.Column('status', sa.String(length=20), nullable=True),
     sa.PrimaryKeyConstraint('id')
