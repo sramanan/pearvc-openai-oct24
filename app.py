@@ -15,16 +15,14 @@ from flask_socketio import SocketIO
 
 from extensions import socketio
 
-
-
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, resources={r"/*": {"origins": ["https://2ff3-4-39-199-2.ngrok-free.app", "http://localhost:5000"]}})
+CORS(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)  # If using Bootstrap
 
-socketio.init_app(app)
+# socketio.init_app(app, cors_allowed_origins="*")
 
 from routes import *  # Import routes
 
@@ -142,14 +140,12 @@ def setup_retell_agent():
 
     return agent
 
-#public_url = ngrok.connect(5000)
-#print(" * ngrok tunnel URL:", public_url)
+
+# socketio.run(app, port=5000,debug=True, allow_unsafe_werkzeug=True)
 
 
-socketio.run(app, port=5000,debug=True)
-    # Start ngrok when the Flask app runs
-
-
+if __name__ == "__main__":
+	app.run(debug=True, port=os.getenv("PORT", default=5000))
 
     
     # Run the Flask app

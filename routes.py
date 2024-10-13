@@ -160,10 +160,3 @@ def handle_call_ended(call_data):
         db.session.commit()
         # Emit a socket.io event to update clients
         socketio.emit('call_updated', call.to_dict())
-
-
-
-
-
-
-
