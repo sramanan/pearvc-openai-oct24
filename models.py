@@ -13,6 +13,8 @@ class Call(db.Model):
     handled_by = db.Column(db.String(50))
     status = db.Column(db.String(20))
     disconnection_reason = db.Column(db.String(50))
+    call_type = db.Column(db.String(50))
+    call_message = db.Column(db.String(100))
 
     def __repr__(self):
         return f'<Call {self.id} - {self.caller_number}>'

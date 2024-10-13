@@ -150,8 +150,6 @@ socketio.run(app, port=5000,debug=True)
     # Start ngrok when the Flask app runs
 
 
-if __name__ == "__main__":
-    pass
 
     
     # Run the Flask app

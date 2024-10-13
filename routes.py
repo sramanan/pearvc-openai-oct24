@@ -110,8 +110,8 @@ def handle_call_status_update(call_data):
     # Update the call record
     call = Call.query.get(call_id)
     if call:
-        call.type = call_type
-        call.message = call_message
+        call.call_type = call_type
+        call.call_message = call_message
         call.status = 'in progress'
         db.session.commit()
         # Emit a socket.io event to update clients
